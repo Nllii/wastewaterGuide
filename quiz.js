@@ -64,8 +64,8 @@ function checkAnswer(question, selectedOptionIndex) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // fetch('http://127.0.0.1:5000/quiz_data')
-    fetch('./quiz_data.json')
+    fetch('http://127.0.0.1:5000/quiz_data')
+    // fetch('./quiz_data.json')
 
         .then(response => response.json())
         .then(data => loadQuiz(data))

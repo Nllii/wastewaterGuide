@@ -4,10 +4,12 @@ from flask_cors import CORS, cross_origin
 import json
 
 
-
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+
+
 def parse_markdown(markdown_text):
     lines = markdown_text.split('\n')
     title = lines[0].replace('Title:', '').strip()
@@ -56,47 +58,47 @@ def parse_markdown(markdown_text):
 
 
 
-# Function to save parsed JSON data to disk
-def save_quiz_data_to_json():
-    with open('quiz.md', 'r') as f:
-        markdown_text = f.read()
-    
-    quiz_data = parse_markdown(markdown_text)
-    
-    with open('quiz_data.json', 'w') as json_file:
-        json.dump(quiz_data, json_file, indent=4)
-
-# Endpoint to serve quiz data from disk
-@app.route('/quiz_data')
-# @cross_origin()
-def serve_quiz_data():
-    try:
-        with open('quiz_data.json', 'r') as json_file:
-            quiz_data = json.load(json_file)
-        return jsonify(quiz_data)
-    except FileNotFoundError:
-        return jsonify({'error': 'Quiz data not found'})
-
-if __name__ == '__main__':
-    # Save parsed quiz data to JSON file on startup
-    save_quiz_data_to_json()
-    
-    # Run the Flask app
-    app.run(debug=True, host='0.0.0.0', port=5000)
-
-
-
-
-
-
-# @app.route('/quiz_data')
-# @cross_origin()
-# def quiz_data():
+# # Function to save parsed JSON data to disk
+# def save_quiz_data_to_json():
 #     with open('quiz.md', 'r') as f:
 #         markdown_text = f.read()
     
 #     quiz_data = parse_markdown(markdown_text)
-#     return jsonify(quiz_data)
+    
+#     with open('quiz_data.json', 'w') as json_file:
+#         json.dump(quiz_data, json_file, indent=4)
+
+# # Endpoint to serve quiz data from disk
+# @app.route('/quiz_data')
+# @cross_origin()
+# def serve_quiz_data():
+#     try:
+#         with open('quiz_data.json', 'r') as json_file:
+#             quiz_data = json.load(json_file)
+#         return jsonify(quiz_data)
+#     except FileNotFoundError:
+#         return jsonify({'error': 'Quiz data not found'})
 
 # if __name__ == '__main__':
-#     app.run(debug=True,host='0.0.0.0',port=5000)
+#     # Save parsed quiz data to JSON file on startup
+#     save_quiz_data_to_json()
+    
+#     # Run the Flask app
+#     app.run(debug=False, host='0.0.0.0', port=5000)
+
+
+
+
+
+
+@app.route('/quiz_data')
+@cross_origin()
+def quiz_data():
+    with open('quiz.md', 'r') as f:
+        markdown_text = f.read()
+    
+    quiz_data = parse_markdown(markdown_text)
+    return jsonify(quiz_data)
+
+if __name__ == '__main__':
+    app.run(debug=True,host='0.0.0.0',port=5000)
