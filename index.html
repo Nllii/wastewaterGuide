@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz App</title>
+    <title>WasteWater Study Guide</title>
     
     <!-- Bootstrap CSS - Replace with CDN or local path as per your preference -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     
+    <!-- Include the CSS here or in a separate file -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,10 +39,9 @@
             background-color: #3a3a3a;
         }
         select {
-            width: 100%; /* Adjust width if needed */
-            /* Bootstrap classes for styling */
-            padding: 12px; /* Bootstrap button padding */
-            font-size: 16px; /* Bootstrap button font size */
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
         }
         label {
             display: block;
@@ -50,23 +50,46 @@
         input[type="radio"] {
             margin-right: 10px;
         }
+        #quiz-title {
+            color: #00bcd4;
+        }
+        .question {
+            color: #8bc34a;
+        }
+        select, button, input[type="radio"] + label {
+            color: #ffeb3b;
+        }
         #quiz-results {
             margin-top: 20px;
             font-weight: bold;
         }
+        .correct {
+            text-decoration: line-through;
+            color: #00ff00;  /* Optional: change color to indicate correct answer */
+        }
+        .highlight {
+            color: rgb(255, 255, 255);
+            background-color: rgb(0, 0, 0); /* or any color you prefer */
+        }
+
+        .highlighter {
+            color: rgb(255, 77, 80);
+            background-color: rgb(0, 0, 0); /* or any color you prefer */
+        }
+    
+    
     </style>
 </head>
 <body>
     <div class="quiz-container">
-        <h1 id="quiz-title"></h1>
+        <h1 id="quiz-title">WasteWater Study Guide</h1>
         <br>
-        <!-- Bootstrap class added to select element -->
         <div id="quiz-questions"></div>
         
         <select id="section-selector" class="form-control" onchange="loadSection()">
             <option value="">Select Section</option>
         </select>
-        <div id="quiz-results"></div>
+        <div id="quiz-results">Score: 0</div>
     </div>
     <audio id="correct-sound" src="./correct.mp3" preload="auto"></audio>
     <audio id="incorrect-sound" src="./incorrect.mp3" preload="auto"></audio>
