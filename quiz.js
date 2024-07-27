@@ -1,6 +1,10 @@
 let quizData = {};
 let score = 0;
 let totalQuestions = 0; // Total number of questions across all sections
+let audioContext;
+let correctSoundBuffer;
+let incorrectSoundBuffer;
+
 
 function loadQuiz(data) {
     quizData = data;
@@ -41,11 +45,10 @@ function loadSection() {
         questionDiv.className = 'question';
         
         const questionText = document.createElement('p');
+        questionText.className = 'highlightable';
         questionText.innerHTML = highlightText(`${questionOffset + index + 1}. ${question.text}`);
         questionDiv.appendChild(questionText);
 
-        addHighlightEvents(questionText); // Add highlight events
-        
         question.options.forEach((option, optionIndex) => {
             const label = document.createElement('label');
             label.innerHTML = `
@@ -61,22 +64,24 @@ function loadSection() {
         
         questionsContainer.appendChild(questionDiv);
     });
+
+    // Add the event listeners to highlightable elements
+    addHighlightEvents();
 }
 
 function checkAnswer(question, selectedOptionIndex, label) {
-    const correctSound = document.getElementById('correct-sound');
-    const incorrectSound = document.getElementById('incorrect-sound');
-    
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        loadSound('correct.mp3').then(buffer => correctSoundBuffer = buffer);
+        loadSound('incorrect.mp3').then(buffer => incorrectSoundBuffer = buffer);
+    }
+
     if (question.correctOption == selectedOptionIndex) {
-        correctSound.pause();  // Ensure it's not playing
-        correctSound.play();
+        playSound(correctSoundBuffer);
         score += 1;  // Increment score for correct answer
         label.classList.add('correct');  // Add strikeout class for correct answer
-        correctSound.currentTime = 0;  // Reset time to ensure it plays from start
     } else {
-        incorrectSound.pause();  // Ensure it's not playing
-        incorrectSound.currentTime = 0;  // Reset time to ensure it plays from start
-        incorrectSound.play();
+        playSound(incorrectSoundBuffer);
         score -= 1;  // Decrement score for incorrect answer
     }
 
@@ -93,9 +98,12 @@ function highlightText(text) {
     return text.replace(/{(.*?)}/g, '<span class="highlightable">$1</span>');
 }
 
-function addHighlightEvents(element) {
-    element.addEventListener('mouseup', highlightTextOnSelect);
-    element.addEventListener('touchend', highlightTextOnSelect);
+function addHighlightEvents() {
+    const highlightableElements = document.querySelectorAll('.highlightable');
+    highlightableElements.forEach(element => {
+        element.addEventListener('mouseup', highlightTextOnSelect);
+        element.addEventListener('touchend', highlightTextOnSelect);
+    });
 }
 
 function highlightTextOnSelect() {
@@ -104,15 +112,45 @@ function highlightTextOnSelect() {
         const range = selection.getRangeAt(0);
         const selectedText = range.extractContents();
         const span = document.createElement('span');
-        span.classList.add('highlighter');
+        span.classList.add('highlight');
         span.appendChild(selectedText);
         range.insertNode(span);
         selection.removeAllRanges(); // Clear selection after highlighting
     }
 }
 
+// Deals with how iOS handles audio playback and interruptions
+
+// async function loadSound(url) {
+//     const response = await fetch(url);
+//     const arrayBuffer = await response.arrayBuffer();
+//     return audioContext.decodeAudioData(arrayBuffer);
+// }
+
+// function playSound(buffer) {
+//     if (!audioContext || !buffer) return;
+//     const source = audioContext.createBufferSource();
+//     source.buffer = buffer;
+//     source.connect(audioContext.destination);
+//     source.start(0);
+// }
+
+
+function loadSound(url) {
+    return fetch(url)
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer));
+}
+
+function playSound(buffer) {
+    if (!audioContext || !buffer) return;
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+    source.start(0);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    // fetch('http://127.0.0.1:5000/quiz_data')
     fetch('./quiz_data.json')
         .then(response => response.json())
         .then(data => {
