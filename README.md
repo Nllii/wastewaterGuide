@@ -3,24 +3,17 @@ Used to study for the exam.
 if you can't run this program, use https://www.jetpunk.com to study.
 
 
-TODO: 
-'''python
+Certification(s) TODO list: 
+```
+[x] Texas Class D
 
-~~-Texas ClassD~~
+[ ] Texas Class C
 
-Texas Class C
+[ ] Texas Class B
 
-Texas Class B
+[ ] Texas Class A
 
-Texas Class A
-
-'''
-
-
-
-
-
-
+```
 
 
 # version 0.0.1
