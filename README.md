@@ -1,9 +1,10 @@
-# Texas wastewaterGuide 
+# Texas WasteWater Study Guide 
 Used to study for the exam.  
 if you can't run this program, use https://www.jetpunk.com to study.
 
 
 TODO: 
+
 ~~-Texas ClassD~~
 
 Texas Class C
