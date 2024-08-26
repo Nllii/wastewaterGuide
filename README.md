@@ -5,8 +5,11 @@ if you can't run this program, use https://www.jetpunk.com to study.
 
 TODO: 
     [x] # ~~- Texas Class D~~
+    
     [ ] # Texas Class C
+
     [ ] # Texas Class B
+    
     [ ] # Texas Class A
 
 
